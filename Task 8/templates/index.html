@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Price Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <div class="logo">
+                <span>📈</span>
+            </div>
+            <h2>Stock Price Prediction</h2>
+            <p class="subheading">Enter the stock data to get the predicted price</p>
+            <form action="/predict" method="POST" id="predictionForm">
+                <div class="input-group">
+                    <input type="number" id="Adj_Close" name="Adj_Close" placeholder="Adjusted Close" required>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="High" name="High" placeholder="High" required>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="Low" name="Low" placeholder="Low" required>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="Open" name="Open" placeholder="Open" required>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="Volume" name="Volume" placeholder="Volume" required>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="Target" name="Target" placeholder="Target" required>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="Score" name="Score" placeholder="Score" required>
+                </div>
+                <button type="submit" class="submit-btn">Get Prediction</button>
+            </form>
+            <div id="predictionResult" class="result"></div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.prediction) {
+                    document.getElementById('predictionResult').innerText = 'Prediction: ' + data.prediction;
+                } else {
+                    document.getElementById('predictionResult').innerText = 'Error: ' + data.error;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
